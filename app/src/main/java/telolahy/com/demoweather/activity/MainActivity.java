@@ -93,17 +93,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         if (lastLocation != null) {
             requestWeatherAtLocation(lastLocation);
+        } else {
+            infoTextView.setText(getString(R.string.location_unavailable_message));
         }
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
     }
 
     // ===========================================================
@@ -115,12 +115,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     // ===========================================================
 
     private void requestWeatherAtLocation(Location location) {
-
-        if (null == location) {
-            this.infoTextView.setText(getString(R.string.location_unavailable_message));
-            this.infoTextView.setVisibility(View.VISIBLE);
-            return;
-        }
 
         HashMap<String, String> params = new HashMap<>();
         params.put("lat", location.getLatitude() + "");
