@@ -31,8 +31,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     // Constants
     // ===========================================================
 
-    private static final int REQUEST_LOCATION_CODE = 1;
-
     // ===========================================================
     // Fields
     // ===========================================================
@@ -88,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     // ===========================================================
     // Methods for Interfaces
     // ===========================================================
-
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {

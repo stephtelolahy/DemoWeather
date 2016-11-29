@@ -9,12 +9,20 @@ import telolahy.com.demoweather.utils.WeatherUtils;
 /**
  * Created by telolahy on 29/11/16.
  * <p>
- * Parse openweathermap
+ * Parsed Model openweathermap
  * http://openweathermap.org/current
  * https://openweathermap.org/weather-conditions
  */
 
 public class Weather {
+
+    // ===========================================================
+    // Constants
+    // ===========================================================
+
+    // ===========================================================
+    // Fields
+    // ===========================================================
 
     public String name;         // City name
 
@@ -34,6 +42,10 @@ public class Weather {
 
     public double tempMin;      // Minimum temperature at the moment.
     public double tempMax;      // Maximum temperature at the moment.
+
+    // ===========================================================
+    // Constructors
+    // ===========================================================
 
     public Weather(JSONObject json) throws JSONException {
 
@@ -72,6 +84,14 @@ public class Weather {
         }
     }
 
+    // ===========================================================
+    // Getter & Setter
+    // ===========================================================
+
+    // ===========================================================
+    // Methods from SuperClass
+    // ===========================================================
+
     @Override
     public String toString() {
         String result = "";
@@ -89,4 +109,21 @@ public class Weather {
         result += "\ntempMax:" + WeatherUtils.kelvinToCelsiusTemperature(this.tempMax);
         return result;
     }
+
+    // ===========================================================
+    // Methods for Interfaces
+    // ===========================================================
+
+    // ===========================================================
+    // Public Methods
+    // ===========================================================
+
+    // ===========================================================
+    // Private Methods
+    // ===========================================================
+
+    // ===========================================================
+    // Inner Classes/Interfaces
+    // ===========================================================
+
 }

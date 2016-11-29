@@ -12,23 +12,51 @@ import okhttp3.Response;
 
 /**
  * Created by telolahy on 29/11/16.
+ * Request command based on a service type defined in ServiceAtlas
  */
 
 public class ModelNetworkTask extends AsyncTask<Void, Void, Boolean> {
 
+    // ===========================================================
+    // Constants
+    // ===========================================================
+
+    // ===========================================================
+    // Fields
+    // ===========================================================
+
     private final ServiceAtlas.ServiceType serviceType;
     private final Map<String, String> params;
-
     private ModelNetworkTaskListener listener;
-
     private Object model;
     private Exception error;
+
+    // ===========================================================
+    // Constructors
+    // ===========================================================
 
     public ModelNetworkTask(ServiceAtlas.ServiceType serviceType, Map<String, String> params, ModelNetworkTaskListener listener) {
         super();
         this.serviceType = serviceType;
         this.params = params;
         this.listener = listener;
+    }
+
+    // ===========================================================
+    // Getter & Setter
+    // ===========================================================
+
+    // ===========================================================
+    // Methods from SuperClass
+    // ===========================================================
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+
+        if (null != this.listener) {
+            this.listener.modelNetworkTaskDidStart();
+        }
     }
 
     @Override
@@ -73,14 +101,21 @@ public class ModelNetworkTask extends AsyncTask<Void, Void, Boolean> {
         }
     }
 
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
+    // ===========================================================
+    // Methods for Interfaces
+    // ===========================================================
 
-        if (null != this.listener) {
-            this.listener.modelNetworkTaskDidStart();
-        }
-    }
+    // ===========================================================
+    // Public Methods
+    // ===========================================================
+
+    // ===========================================================
+    // Private Methods
+    // ===========================================================
+
+    // ===========================================================
+    // Inner Classes/Interfaces
+    // ===========================================================
 
     public interface ModelNetworkTaskListener {
 

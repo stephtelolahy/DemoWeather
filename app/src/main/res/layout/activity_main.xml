@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone"
-        android:textColor="@color/colorTextDefault"/>
+        android:textColor="@color/colorTextDefault" />
 
     <ProgressBar
         android:id="@+id/progress_bar"

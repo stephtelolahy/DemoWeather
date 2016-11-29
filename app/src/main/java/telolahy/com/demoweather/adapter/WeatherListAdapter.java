@@ -22,14 +22,33 @@ import telolahy.com.demoweather.utils.WeatherUtils;
 
 public class WeatherListAdapter extends BaseAdapter {
 
+    // ===========================================================
+    // Constants
+    // ===========================================================
+
+    // ===========================================================
+    // Fields
+    // ===========================================================
 
     private ArrayList<Weather> items;
     private Context context;
+
+    // ===========================================================
+    // Constructors
+    // ===========================================================
 
     public WeatherListAdapter(ArrayList<Weather> items, Context context) {
         this.items = items;
         this.context = context;
     }
+
+    // ===========================================================
+    // Getter & Setter
+    // ===========================================================
+
+    // ===========================================================
+    // Methods from SuperClass
+    // ===========================================================
 
     @Override
     public int getCount() {
@@ -54,10 +73,6 @@ public class WeatherListAdapter extends BaseAdapter {
             LayoutInflater inflater = (LayoutInflater) this.context.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.weather_item, null);
         }
-
-        /**
-         - température max - température min
-         */
 
         TextView nameTextView = (TextView) view.findViewById(R.id.name_text_view);
         ImageView iconImageView = (ImageView) view.findViewById(R.id.icon_image_view);
@@ -85,4 +100,21 @@ public class WeatherListAdapter extends BaseAdapter {
 
         return view;
     }
+
+    // ===========================================================
+    // Methods for Interfaces
+    // ===========================================================
+
+    // ===========================================================
+    // Public Methods
+    // ===========================================================
+
+    // ===========================================================
+    // Private Methods
+    // ===========================================================
+
+    // ===========================================================
+    // Inner Classes/Interfaces
+    // ===========================================================
+
 }
