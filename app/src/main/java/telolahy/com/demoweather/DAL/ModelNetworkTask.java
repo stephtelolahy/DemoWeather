@@ -76,7 +76,18 @@ public class ModelNetworkTask extends AsyncTask<Void, Void, Boolean> {
         }
     }
 
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+
+        if (null != this.listener) {
+            this.listener.modelNetworkTaskDidStart();
+        }
+    }
+
     public interface ModelNetworkTaskListener {
+
+        void modelNetworkTaskDidStart();
 
         void modelNetworkTaskDidSucceed(Object model);
 

@@ -1,20 +1,20 @@
 package telolahy.com.demoweather.activity;
 
-import android.Manifest;
-import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.app.ProgressDialog;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AlertDialog;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +25,7 @@ import telolahy.com.demoweather.R;
 import telolahy.com.demoweather.adapter.WeatherListAdapter;
 import telolahy.com.demoweather.model.Weather;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     // ===========================================================
     // Constants
@@ -39,9 +39,9 @@ public class MainActivity extends AppCompatActivity {
 
     private ListView listView;
     private TextView infoTextView;
+    private ProgressBar progressBar;
 
-    private LocationManager locationManager;
-    private final String provider = LocationManager.GPS_PROVIDER;
+    private GoogleApiClient googleApiClient;
 
     // ===========================================================
     // Constructors
@@ -60,56 +60,54 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Create an instance of GoogleAPIClient.
+        if (googleApiClient == null) {
+            googleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+
         this.listView = (ListView) findViewById(R.id.list_view);
         this.infoTextView = (TextView) findViewById(R.id.info_text_view);
-
-        // Get the location manager
-        this.locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        boolean enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-        // check if enabled and if not send user to the GSP settings
-        // Better solution would be to display a dialog and suggesting to
-        // go to the settings
-        if (!enabled) {
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(intent);
-        }
-
-        // Check location permission
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Check Permissions Now
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_CODE);
-            return;
-        }
-
-        // permission has been granted, continue as usual
-        Location location = locationManager.getLastKnownLocation(provider);
-        requestWeatherAtLocation(location);
+        this.progressBar = (ProgressBar) findViewById(R.id.progress_bar);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == REQUEST_LOCATION_CODE) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // We can now safely use the API we requested access to
-
-                // permission has been granted, continue as usual
-                try {
-                    Location location = locationManager.getLastKnownLocation(provider);
-                    requestWeatherAtLocation(location);
-
-                } catch (SecurityException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+    protected void onStart() {
+        googleApiClient.connect();
+        super.onStart();
     }
+
+    protected void onStop() {
+        googleApiClient.disconnect();
+        super.onStop();
+    }
+
 
     // ===========================================================
     // Methods for Interfaces
     // ===========================================================
+
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+        Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        if (lastLocation != null) {
+            requestWeatherAtLocation(lastLocation);
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
 
     // ===========================================================
     // Public Methods
@@ -133,17 +131,17 @@ public class MainActivity extends AppCompatActivity {
         params.put("APPID", "18c77339b0fcdff43a5bdd2e583ee950");
 
         ModelNetworkTask getWeatherTask = new ModelNetworkTask(ServiceAtlas.ServiceType.ServiceWeather, params, new ModelNetworkTask.ModelNetworkTaskListener() {
+
+            @Override
+            public void modelNetworkTaskDidStart() {
+            }
+
             @Override
             public void modelNetworkTaskDidSucceed(Object model) {
 
-                Weather weather = (Weather) model;
+                progressBar.setVisibility(View.GONE);
 
-                Log.i("", weather.toString());
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle(weather.name);
-                builder.setMessage(weather.toString());
-                builder.setPositiveButton("OK", null);
-                builder.create().show();
+                Weather weather = (Weather) model;
 
                 ArrayList<Weather> weathers = new ArrayList<>();
                 weathers.add(weather);
@@ -153,6 +151,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void modelNetworkTaskDidFail(Exception error) {
+
+                progressBar.setVisibility(View.GONE);
+
                 infoTextView.setText(error.getLocalizedMessage());
                 infoTextView.setVisibility(View.VISIBLE);
             }
