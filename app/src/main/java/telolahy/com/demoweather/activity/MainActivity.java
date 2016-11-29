@@ -9,15 +9,12 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.util.ArrayMap;
-import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -156,7 +153,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void modelNetworkTaskDidFail(Exception error) {
-                Toast.makeText(MainActivity.this, error.toString(), Toast.LENGTH_LONG).show();
+                infoTextView.setText(error.getLocalizedMessage());
+                infoTextView.setVisibility(View.VISIBLE);
             }
         });
         getWeatherTask.execute();
