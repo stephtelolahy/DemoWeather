@@ -1,7 +1,9 @@
 package telolahy.com.demoweather.activity;
 
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import telolahy.com.demoweather.DAL.ModelNetworkTask;
@@ -19,7 +21,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void modelNetworkTaskDidSucceed(Object model) {
                 Weather weather = (Weather) model;
-                Toast.makeText(MainActivity.this, weather.toString(), Toast.LENGTH_LONG).show();
+                Log.i("", weather.toString());
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle(weather.name);
+                builder.setMessage(weather.toString());
+                builder.setPositiveButton("OK", null);
+                builder.create().show();
             }
 
             @Override

@@ -1,12 +1,10 @@
 package telolahy.com.demoweather.DAL;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Map;
@@ -15,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import telolahy.com.demoweather.utils.JSONWeatherParser;
+import telolahy.com.demoweather.model.Weather;
 
 /**
  * Created by telolahy on 29/11/16.
@@ -77,7 +75,7 @@ public class ModelNetworkTask extends AsyncTask<Void, Void, Boolean> {
                 .readTimeout(60, TimeUnit.SECONDS)
                 .build();
 
-        String url = BASE_URL + "?q=" + "London,UK" + "&APPID=" + "18c77339b0fcdff43a5bdd2e583ee950";
+        String url = BASE_URL + "?lat=" + 35 + "&lon=" + 139 + "&APPID=" + "18c77339b0fcdff43a5bdd2e583ee950";
 
         Request request = new Request.Builder()
                 .url(url)
@@ -88,7 +86,10 @@ public class ModelNetworkTask extends AsyncTask<Void, Void, Boolean> {
 
         Log.i("ModelNetworkTask", jsonString);
 
-        Object model = JSONWeatherParser.getWeather(jsonString);
+        // Create JSONObject
+        JSONObject jsonObject = new JSONObject(jsonString);
+
+        Object model = new Weather(jsonObject);
 
         return model;
     }
