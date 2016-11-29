@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 progressBar.setVisibility(View.GONE);
 
                 Weather weather = (Weather) model;
+                weather.name = getString(R.string.current_location);
 
                 ArrayList<Weather> weathers = new ArrayList<>();
                 weathers.add(weather);

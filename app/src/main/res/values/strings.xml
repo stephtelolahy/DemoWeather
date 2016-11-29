@@ -3,4 +3,5 @@
     <string name="location_unavailable_message">Location not available</string>
     <string name="sunrise">sunrise</string>
     <string name="sunset">sunset</string>
+    <string name="current_location">géolocalisation</string>
 </resources>
