@@ -97,6 +97,7 @@ public class ModelNetworkTask extends AsyncTask<Void, Void, Boolean> {
         Response response = client.newCall(request).execute();
         String jsonString = response.body().string();
 
+        Log.i("ModelNetworkTask", url);
         Log.i("ModelNetworkTask", jsonString);
 
         // Create JSONObject
@@ -108,6 +109,7 @@ public class ModelNetworkTask extends AsyncTask<Void, Void, Boolean> {
     }
 
     public interface ModelNetworkTaskListener {
+
         void modelNetworkTaskDidSucceed(Object model);
 
         void modelNetworkTaskDidFail(Exception error);
