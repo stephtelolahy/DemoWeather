@@ -129,11 +129,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         params.put("lat", location.getLatitude() + "");
         params.put("lon", location.getLongitude() + "");
         params.put("APPID", "18c77339b0fcdff43a5bdd2e583ee950");
-
         ModelNetworkTask getWeatherTask = new ModelNetworkTask(ServiceAtlas.ServiceType.ServiceWeather, params, new ModelNetworkTask.ModelNetworkTaskListener() {
 
             @Override
             public void modelNetworkTaskDidStart() {
+
+                progressBar.setVisibility(View.VISIBLE);
             }
 
             @Override

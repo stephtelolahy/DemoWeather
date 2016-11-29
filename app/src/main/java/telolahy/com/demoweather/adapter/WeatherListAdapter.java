@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import telolahy.com.demoweather.R;
 import telolahy.com.demoweather.model.Weather;
+import telolahy.com.demoweather.utils.WeatherUtils;
 
 /**
  * Created by stephano on 29/11/16.
@@ -54,15 +55,33 @@ public class WeatherListAdapter extends BaseAdapter {
             view = inflater.inflate(R.layout.weather_item, null);
         }
 
+        /**
+         - température max - température min
+         */
+
         TextView nameTextView = (TextView) view.findViewById(R.id.name_text_view);
         ImageView iconImageView = (ImageView) view.findViewById(R.id.icon_image_view);
+        TextView descriptionTextView = (TextView) view.findViewById(R.id.description_text_view);
+        TextView temperatureTextView = (TextView) view.findViewById(R.id.temperature_text_view);
+        TextView sunriseTextView = (TextView) view.findViewById(R.id.sunrise_text_view);
+        TextView sunsetTextView = (TextView) view.findViewById(R.id.sunset_text_view);
+        TextView humidityTextView = (TextView) view.findViewById(R.id.humidity_text_view);
+        TextView windTextView = (TextView) view.findViewById(R.id.wind_text_view);
+        TextView minTemperatureTextView = (TextView) view.findViewById(R.id.temperature_min_text_view);
+        TextView maxTemperatureTextView = (TextView) view.findViewById(R.id.temperature_max_text_view);
 
-        Weather weather = this.items.get(i);
-        nameTextView.setText(weather.name);
-        Picasso.with(this.context)
-                .load(weather.iconUrl)
-                .into(iconImageView);
+        Weather item = this.items.get(i);
 
+        nameTextView.setText(item.name);
+        descriptionTextView.setText(item.description);
+        Picasso.with(this.context).load(item.iconUrl).into(iconImageView);
+        temperatureTextView.setText(WeatherUtils.kelvinToCelsiusTemperature(item.temperature));
+        sunriseTextView.setText(context.getString(R.string.sunrise) + " " + WeatherUtils.timestampToDate(item.sunrise));
+        sunsetTextView.setText(context.getString(R.string.sunset) + " " + WeatherUtils.timestampToDate(item.sunset));
+        humidityTextView.setText(item.humidity + "%");
+        windTextView.setText(item.windSpeed + "mps");
+        minTemperatureTextView.setText(WeatherUtils.kelvinToCelsiusTemperature(item.tempMin));
+        maxTemperatureTextView.setText(WeatherUtils.kelvinToCelsiusTemperature(item.tempMax));
 
         return view;
     }

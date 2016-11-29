@@ -50,9 +50,6 @@ public class ModelNetworkTask extends AsyncTask<Void, Void, Boolean> {
             Response response = client.newCall(request).execute();
             String jsonString = response.body().string();
 
-            Log.i("ModelNetworkTask", url);
-            Log.i("ModelNetworkTask", jsonString);
-
             this.model = ServiceAtlas.parseModelForService(this.serviceType, jsonString);
             return Boolean.TRUE;
 
