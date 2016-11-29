@@ -9,16 +9,23 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.util.ArrayMap;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import telolahy.com.demoweather.DAL.ModelNetworkTask;
 import telolahy.com.demoweather.DAL.ServiceAtlas;
 import telolahy.com.demoweather.R;
+import telolahy.com.demoweather.adapter.WeatherListAdapter;
 import telolahy.com.demoweather.model.Weather;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
     // ===========================================================
     // Fields
     // ===========================================================
+
+    private ListView listView;
+    private TextView infoTextView;
 
     private LocationManager locationManager;
     private final String provider = LocationManager.GPS_PROVIDER;
@@ -52,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.listView = (ListView) findViewById(R.id.list_view);
+        this.infoTextView = (TextView) findViewById(R.id.info_text_view);
 
         // Get the location manager
         this.locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -112,7 +125,8 @@ public class MainActivity extends AppCompatActivity {
     private void requestWeatherAtLocation(Location location) {
 
         if (null == location) {
-            Toast.makeText(this, "Location not available", Toast.LENGTH_LONG).show();
+            this.infoTextView.setText(getString(R.string.location_unavailable_message));
+            this.infoTextView.setVisibility(View.VISIBLE);
             return;
         }
 
@@ -124,13 +138,20 @@ public class MainActivity extends AppCompatActivity {
         ModelNetworkTask getWeatherTask = new ModelNetworkTask(ServiceAtlas.ServiceType.ServiceWeather, params, new ModelNetworkTask.ModelNetworkTaskListener() {
             @Override
             public void modelNetworkTaskDidSucceed(Object model) {
+
                 Weather weather = (Weather) model;
+
                 Log.i("", weather.toString());
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle(weather.name);
                 builder.setMessage(weather.toString());
                 builder.setPositiveButton("OK", null);
                 builder.create().show();
+
+                ArrayList<Weather> weathers = new ArrayList<>();
+                weathers.add(weather);
+                WeatherListAdapter adapter = new WeatherListAdapter(weathers, MainActivity.this);
+                listView.setAdapter(adapter);
             }
 
             @Override
