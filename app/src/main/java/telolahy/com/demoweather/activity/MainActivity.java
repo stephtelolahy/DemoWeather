@@ -17,6 +17,7 @@ import android.widget.Toast;
 import java.util.HashMap;
 
 import telolahy.com.demoweather.DAL.ModelNetworkTask;
+import telolahy.com.demoweather.DAL.ServiceAtlas;
 import telolahy.com.demoweather.R;
 import telolahy.com.demoweather.model.Weather;
 
@@ -120,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         params.put("lon", location.getLongitude() + "");
         params.put("APPID", "18c77339b0fcdff43a5bdd2e583ee950");
 
-        ModelNetworkTask getWeatherTask = new ModelNetworkTask(params, new ModelNetworkTask.ModelNetworkTaskListener() {
+        ModelNetworkTask getWeatherTask = new ModelNetworkTask(ServiceAtlas.ServiceType.ServiceWeather, params, new ModelNetworkTask.ModelNetworkTaskListener() {
             @Override
             public void modelNetworkTaskDidSucceed(Object model) {
                 Weather weather = (Weather) model;

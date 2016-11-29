@@ -4,17 +4,14 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import telolahy.com.demoweather.model.Weather;
 
 /**
  * Created by telolahy on 29/11/16.
@@ -24,14 +21,16 @@ public class ModelNetworkTask extends AsyncTask<Void, Void, Boolean> {
 
     private static String BASE_URL = "http://api.openweathermap.org/data/2.5/weather";
 
+    private final ServiceAtlas.ServiceType serviceType;
     private final Map<String, String> params;
     private ModelNetworkTaskListener listener;
 
     private Object model;
     private Exception error;
 
-    public ModelNetworkTask(Map<String, String> params, ModelNetworkTaskListener listener) {
+    public ModelNetworkTask(ServiceAtlas.ServiceType serviceType, Map<String, String> params, ModelNetworkTaskListener listener) {
         super();
+        this.serviceType = serviceType;
         this.params = params;
         this.listener = listener;
     }
@@ -76,19 +75,7 @@ public class ModelNetworkTask extends AsyncTask<Void, Void, Boolean> {
                 .readTimeout(60, TimeUnit.SECONDS)
                 .build();
 
-        String url = BASE_URL;
-        boolean firstEntry = true;
-        for (Map.Entry<String, String> entry : this.params.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            if (firstEntry) {
-                firstEntry = false;
-                url += "?";
-            } else {
-                url += "&";
-            }
-            url += key + "=" + URLEncoder.encode(value, "UTF-8");
-        }
+        String url = ServiceAtlas.urlForService(this.serviceType, this.params);
 
         Request request = new Request.Builder()
                 .url(url)
@@ -100,10 +87,7 @@ public class ModelNetworkTask extends AsyncTask<Void, Void, Boolean> {
         Log.i("ModelNetworkTask", url);
         Log.i("ModelNetworkTask", jsonString);
 
-        // Create JSONObject
-        JSONObject jsonObject = new JSONObject(jsonString);
-
-        Object model = new Weather(jsonObject);
+        Object model = ServiceAtlas.parseModelForService(this.serviceType, jsonString);
 
         return model;
     }
