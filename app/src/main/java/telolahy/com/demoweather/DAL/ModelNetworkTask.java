@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -75,7 +76,19 @@ public class ModelNetworkTask extends AsyncTask<Void, Void, Boolean> {
                 .readTimeout(60, TimeUnit.SECONDS)
                 .build();
 
-        String url = BASE_URL + "?lat=" + 35 + "&lon=" + 139 + "&APPID=" + "18c77339b0fcdff43a5bdd2e583ee950";
+        String url = BASE_URL;
+        boolean firstEntry = true;
+        for (Map.Entry<String, String> entry : this.params.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            if (firstEntry) {
+                firstEntry = false;
+                url += "?";
+            } else {
+                url += "&";
+            }
+            url += key + "=" + URLEncoder.encode(value, "UTF-8");
+        }
 
         Request request = new Request.Builder()
                 .url(url)
