@@ -11,7 +11,7 @@ import okhttp3.Response;
 
 /**
  * Created by telolahy on 29/11/16.
- * Model fetching task based on a service type defined in ServiceAtlas
+ * API Call task based on a service type defined in ServiceAtlas
  */
 
 public class ServiceTask extends AsyncTask<Void, Void, Boolean> {

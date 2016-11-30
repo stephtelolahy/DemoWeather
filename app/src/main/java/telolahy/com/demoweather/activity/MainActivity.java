@@ -21,9 +21,10 @@ import telolahy.com.demoweather.DAL.ServiceTask;
 import telolahy.com.demoweather.DAL.ServiceAtlas;
 import telolahy.com.demoweather.R;
 import telolahy.com.demoweather.adapter.WeatherListAdapter;
+import telolahy.com.demoweather.manager.UserLocationManager;
 import telolahy.com.demoweather.model.Weather;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements UserLocationManager.UserLocationManagerListener {
 
     // ===========================================================
     // Constants
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private TextView infoTextView;
     private ProgressBar progressBar;
 
-    private GoogleApiClient googleApiClient;
+    private UserLocationManager locationManager;
 
     // ===========================================================
     // Constructors
@@ -56,27 +57,21 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Create an instance of GoogleAPIClient.
-        if (googleApiClient == null) {
-            googleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-        }
-
         this.listView = (ListView) findViewById(R.id.list_view);
         this.infoTextView = (TextView) findViewById(R.id.info_text_view);
         this.progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+
+        this.locationManager = new UserLocationManager(this, this);
+        this.locationManager.requestLocation();
     }
 
     protected void onStart() {
-        googleApiClient.connect();
+        this.locationManager.handleActivityStart();
         super.onStart();
     }
 
     protected void onStop() {
-        googleApiClient.disconnect();
+        this.locationManager.handleActivityStop();
         super.onStop();
     }
 
@@ -86,33 +81,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     // ===========================================================
 
     @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
-        Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-        if (lastLocation != null) {
-            requestWeatherAtLocation(lastLocation);
-        } else {
-            infoTextView.setText(getString(R.string.location_unavailable_message));
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-    }
-
-    // ===========================================================
-    // Public Methods
-    // ===========================================================
-
-    // ===========================================================
-    // Private Methods
-    // ===========================================================
-
-    private void requestWeatherAtLocation(Location location) {
+    public void userLocationManagerDidReceiveLocation(Location location) {
 
         HashMap<String, String> params = new HashMap<>();
         params.put("lat", location.getLatitude() + "");
@@ -151,6 +120,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         });
         getWeatherTask.execute();
     }
+
+    @Override
+    public void userLocationManagerDidFail() {
+        infoTextView.setText(getString(R.string.location_unavailable_message));
+    }
+
+    // ===========================================================
+    // Public Methods
+    // ===========================================================
+
+    // ===========================================================
+    // Private Methods
+    // ===========================================================
 
     // ===========================================================
     // Inner Classes/Interfaces
