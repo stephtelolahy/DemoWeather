@@ -20,6 +20,8 @@ public class ServiceAtlas {
     // Constants
     // ===========================================================
 
+    public static final String URL_SERVICE_WEATHER = "http://api.openweathermap.org/data/2.5/weather";
+
     public enum ServiceType {
         ServiceWeather
     }
@@ -53,7 +55,7 @@ public class ServiceAtlas {
         String url = null;
         switch (serviceType) {
             case ServiceWeather:
-                url = "http://api.openweathermap.org/data/2.5/weather";
+                url = URL_SERVICE_WEATHER;
                 break;
 
             default:
@@ -61,17 +63,19 @@ public class ServiceAtlas {
         }
 
         // append parameters
-        boolean firstEntry = true;
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            if (firstEntry) {
-                firstEntry = false;
-                url += "?";
-            } else {
-                url += "&";
+        if (null != params) {
+            boolean firstEntry = true;
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+                if (firstEntry) {
+                    firstEntry = false;
+                    url += "?";
+                } else {
+                    url += "&";
+                }
+                url += key + "=" + URLEncoder.encode(value, "UTF-8");
             }
-            url += key + "=" + URLEncoder.encode(value, "UTF-8");
         }
 
         return url;
