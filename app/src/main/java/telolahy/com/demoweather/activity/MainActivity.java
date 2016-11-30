@@ -1,8 +1,6 @@
 package telolahy.com.demoweather.activity;
 
-import android.app.ProgressDialog;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,7 +17,7 @@ import com.google.android.gms.location.LocationServices;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import telolahy.com.demoweather.DAL.ModelNetworkTask;
+import telolahy.com.demoweather.DAL.ServiceTask;
 import telolahy.com.demoweather.DAL.ServiceAtlas;
 import telolahy.com.demoweather.R;
 import telolahy.com.demoweather.adapter.WeatherListAdapter;
@@ -120,16 +118,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         params.put("lat", location.getLatitude() + "");
         params.put("lon", location.getLongitude() + "");
         params.put("APPID", "18c77339b0fcdff43a5bdd2e583ee950");
-        ModelNetworkTask getWeatherTask = new ModelNetworkTask(ServiceAtlas.ServiceType.ServiceWeather, params, new ModelNetworkTask.ModelNetworkTaskListener() {
+        ServiceTask getWeatherTask = new ServiceTask(ServiceAtlas.ServiceType.ServiceWeather, params, new ServiceTask.ServiceTaskListener() {
 
             @Override
-            public void modelNetworkTaskDidStart() {
+            public void serviceTaskDidStart() {
 
                 progressBar.setVisibility(View.VISIBLE);
             }
 
             @Override
-            public void modelNetworkTaskDidSucceed(Object model) {
+            public void serviceTaskDidSucceed(Object model) {
 
                 progressBar.setVisibility(View.GONE);
 
@@ -143,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
 
             @Override
-            public void modelNetworkTaskDidFail(Exception error) {
+            public void serviceTaskDidFail(Exception error) {
 
                 progressBar.setVisibility(View.GONE);
 

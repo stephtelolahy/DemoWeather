@@ -1,7 +1,6 @@
 package telolahy.com.demoweather.DAL;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -12,10 +11,10 @@ import okhttp3.Response;
 
 /**
  * Created by telolahy on 29/11/16.
- * Request command based on a service type defined in ServiceAtlas
+ * Model fetching task based on a service type defined in ServiceAtlas
  */
 
-public class ModelNetworkTask extends AsyncTask<Void, Void, Boolean> {
+public class ServiceTask extends AsyncTask<Void, Void, Boolean> {
 
     // ===========================================================
     // Constants
@@ -27,7 +26,7 @@ public class ModelNetworkTask extends AsyncTask<Void, Void, Boolean> {
 
     private final ServiceAtlas.ServiceType serviceType;
     private final Map<String, String> params;
-    private ModelNetworkTaskListener listener;
+    private ServiceTaskListener listener;
     private Object model;
     private Exception error;
 
@@ -35,7 +34,7 @@ public class ModelNetworkTask extends AsyncTask<Void, Void, Boolean> {
     // Constructors
     // ===========================================================
 
-    public ModelNetworkTask(ServiceAtlas.ServiceType serviceType, Map<String, String> params, ModelNetworkTaskListener listener) {
+    public ServiceTask(ServiceAtlas.ServiceType serviceType, Map<String, String> params, ServiceTaskListener listener) {
         super();
         this.serviceType = serviceType;
         this.params = params;
@@ -55,7 +54,7 @@ public class ModelNetworkTask extends AsyncTask<Void, Void, Boolean> {
         super.onPreExecute();
 
         if (null != this.listener) {
-            this.listener.modelNetworkTaskDidStart();
+            this.listener.serviceTaskDidStart();
         }
     }
 
@@ -94,9 +93,9 @@ public class ModelNetworkTask extends AsyncTask<Void, Void, Boolean> {
 
         if (null != this.listener) {
             if (aBoolean.booleanValue()) {
-                this.listener.modelNetworkTaskDidSucceed(this.model);
+                this.listener.serviceTaskDidSucceed(this.model);
             } else {
-                this.listener.modelNetworkTaskDidFail(this.error);
+                this.listener.serviceTaskDidFail(this.error);
             }
         }
     }
@@ -117,12 +116,12 @@ public class ModelNetworkTask extends AsyncTask<Void, Void, Boolean> {
     // Inner Classes/Interfaces
     // ===========================================================
 
-    public interface ModelNetworkTaskListener {
+    public interface ServiceTaskListener {
 
-        void modelNetworkTaskDidStart();
+        void serviceTaskDidStart();
 
-        void modelNetworkTaskDidSucceed(Object model);
+        void serviceTaskDidSucceed(Object model);
 
-        void modelNetworkTaskDidFail(Exception error);
+        void serviceTaskDidFail(Exception error);
     }
 }

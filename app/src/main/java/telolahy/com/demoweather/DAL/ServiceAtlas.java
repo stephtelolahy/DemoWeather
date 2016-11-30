@@ -11,7 +11,7 @@ import telolahy.com.demoweather.model.Weather;
 
 /**
  * Created by stephano on 29/11/16.
- * Here are defined all APIs configuration for requests performed by ModelNetworkTask
+ * Here are defined all APIs configuration for requests performed by ServiceTask
  */
 
 public class ServiceAtlas {
