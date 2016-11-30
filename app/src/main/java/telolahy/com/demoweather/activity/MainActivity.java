@@ -24,7 +24,7 @@ import telolahy.com.demoweather.adapter.WeatherListAdapter;
 import telolahy.com.demoweather.manager.UserLocationManager;
 import telolahy.com.demoweather.model.Weather;
 
-public class MainActivity extends AppCompatActivity implements UserLocationManager.UserLocationManagerListener {
+public class MainActivity extends AppCompatActivity implements UserLocationManager.UserLocationManagerListener, ServiceTask.ServiceTaskListener {
 
     // ===========================================================
     // Constants
@@ -87,43 +87,39 @@ public class MainActivity extends AppCompatActivity implements UserLocationManag
         params.put("lat", location.getLatitude() + "");
         params.put("lon", location.getLongitude() + "");
         params.put("APPID", "18c77339b0fcdff43a5bdd2e583ee950");
-        ServiceTask getWeatherTask = new ServiceTask(ServiceAtlas.ServiceType.ServiceWeather, params, new ServiceTask.ServiceTaskListener() {
-
-            @Override
-            public void serviceTaskDidStart() {
-
-                progressBar.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void serviceTaskDidSucceed(Object model) {
-
-                progressBar.setVisibility(View.GONE);
-
-                Weather weather = (Weather) model;
-                weather.name = getString(R.string.current_location);
-
-                ArrayList<Weather> weathers = new ArrayList<>();
-                weathers.add(weather);
-                WeatherListAdapter adapter = new WeatherListAdapter(weathers, MainActivity.this);
-                listView.setAdapter(adapter);
-            }
-
-            @Override
-            public void serviceTaskDidFail(Exception error) {
-
-                progressBar.setVisibility(View.GONE);
-
-                infoTextView.setText(error.getLocalizedMessage());
-                infoTextView.setVisibility(View.VISIBLE);
-            }
-        });
+        ServiceTask getWeatherTask = new ServiceTask(ServiceAtlas.ServiceType.ServiceWeather, params, this);
         getWeatherTask.execute();
     }
 
     @Override
     public void userLocationManagerDidFail() {
         infoTextView.setText(getString(R.string.location_unavailable_message));
+    }
+
+    @Override
+    public void serviceTaskDidStart() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void serviceTaskDidSucceed(Object model) {
+        progressBar.setVisibility(View.GONE);
+
+        Weather weather = (Weather) model;
+        weather.name = getString(R.string.current_location);
+
+        ArrayList<Weather> weathers = new ArrayList<>();
+        weathers.add(weather);
+        WeatherListAdapter adapter = new WeatherListAdapter(weathers, this);
+        listView.setAdapter(adapter);
+    }
+
+    @Override
+    public void serviceTaskDidFail(Exception error) {
+        progressBar.setVisibility(View.GONE);
+
+        infoTextView.setText(error.getLocalizedMessage());
+        infoTextView.setVisibility(View.VISIBLE);
     }
 
     // ===========================================================
