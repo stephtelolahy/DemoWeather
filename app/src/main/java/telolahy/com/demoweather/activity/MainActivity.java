@@ -2,23 +2,17 @@ package telolahy.com.demoweather.activity;
 
 import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import telolahy.com.demoweather.DAL.ServiceTask;
 import telolahy.com.demoweather.DAL.ServiceAtlas;
+import telolahy.com.demoweather.DAL.ServiceTask;
 import telolahy.com.demoweather.R;
 import telolahy.com.demoweather.adapter.WeatherListAdapter;
 import telolahy.com.demoweather.manager.UserLocationManager;

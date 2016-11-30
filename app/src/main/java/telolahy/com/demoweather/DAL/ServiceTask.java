@@ -1,6 +1,7 @@
 package telolahy.com.demoweather.DAL;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -70,12 +71,16 @@ public class ServiceTask extends AsyncTask<Void, Void, Boolean> {
 
             String url = ServiceAtlas.urlForService(this.serviceType, this.params);
 
+            Log.i("url", url);
+
             Request request = new Request.Builder()
                     .url(url)
                     .build();
 
             Response response = client.newCall(request).execute();
             String jsonString = response.body().string();
+
+            Log.i("json", jsonString);
 
             this.model = ServiceAtlas.parseModelForService(this.serviceType, jsonString);
             return Boolean.TRUE;

@@ -10,8 +10,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
-import telolahy.com.demoweather.R;
-
 /**
  * Created by stephano on 30/11/16.
  */
